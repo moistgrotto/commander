@@ -23,7 +23,6 @@ function addPlayer() {
 
     //Validation
     if (currentplayername === ""){
-        //alert("Please enter a valid name!");
         $('#myModal').modal();
         return;
     }
