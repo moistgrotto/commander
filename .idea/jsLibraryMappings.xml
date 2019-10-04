@@ -2,6 +2,6 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$/docs/scripts/script.js" libraries="{@types/jquery, HTML}" />
-    <file url="PROJECT" libraries="{@types/jquery, HTML}" />
+    <file url="PROJECT" libraries="{@types/jquery, HTML, dataTables.bootstrap4, jquery.dataTables}" />
   </component>
 </project>

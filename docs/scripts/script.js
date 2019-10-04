@@ -13,7 +13,7 @@ $("#butt-button").click(function () {
 $("#add-player").click(addPlayer);
 
 $("#player-entry").on("keypress", function (e) {
-    if (e.which == 13) {
+    if (e.which === 13) {
         addPlayer();
     }
 });
@@ -58,6 +58,4 @@ function getPlayers() {
        names += $(this).html() + " ";
     });
     console.log(names);
-
 }
-
