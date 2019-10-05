@@ -1,3 +1,2 @@
 # Ignore jquery... only added for auto-completion reasons. On the main site we use a CDN.
-docs/scripts/jquery-3.4.1.js
-docs/bootstrap-4.3.1
+docs/libraries/

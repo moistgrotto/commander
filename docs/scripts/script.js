@@ -6,6 +6,8 @@
 
 let playerautoid = 0;
 
+let playerlistingtable = $('#player-listing-table').DataTable({searching: false, lengthChange: false});
+
 $("#butt-button").click(function () {
     $("#butt-content").append("Ass");
 });
@@ -19,33 +21,39 @@ $("#player-entry").on("keypress", function (e) {
 });
 
 function addPlayer() {
-    let currentplayername = $("#player-entry").val();
+    let currentplayername = $("#player-entry").val().trim();
 
     //Validation
     if (currentplayername === ""){
-        $('#myModal').modal();
+        $('#missing-name').dialog("open");
         return;
     }
 
     playerautoid += 1;
     let currentplayerid = playerautoid;
 
-    $("#player-list").append(`
-    <tr data-player-id="` + currentplayerid + `">
-        <th scope="row">` + currentplayerid + `</th>
-        <td class="player-name">` + currentplayername + `</td>
-        <td class="player-score"></td>
-        <td>  
-            <a href="#" class="btn btn-primary rename"><i class="fas fa-pencil-alt"></i>  Rename</a>
-            <a href="#" class="btn btn-danger delete"><i class="fas fa-trash"></i>  Delete</a>
-        </td>
-    </tr>
-    `);
-    $("[data-player-id=" + currentplayerid + "] .delete").click(function () {
-        console.log("Deleting player" + currentplayerid);
-        $("[data-player-id=" + currentplayerid + "]").remove();
+    //$("#player-list").append(`
+    //$("#player-list").append(`
+    let currentplayerrow =
+    playerlistingtable.row.add([currentplayerid,currentplayername,'',
+    `<a href="#" class="btn btn-primary rename"><i class="fas fa-pencil-alt"></i>  Rename</a>
+    <a href="#" class="btn btn-danger delete"><i class="fas fa-trash"></i>  Delete</a>`]).draw().node();
+
+    // Add the delete function to each player row
+    $(currentplayerrow).find('.delete').click(function () {
+        playerlistingtable.row($(currentplayerrow)).remove().draw();
+        console.log('here');
     });
 
+    // Add the rename function to each player row
+    $(currentplayerrow).find('.rename').click(function () {
+        console.log("Renaming: "+currentplayerid);
+        // $("#rename-user").dialog("open");
+        renamePlayer(currentplayerrow);
+
+    });
+
+    // Clear the Name field after entry
     $("#player-entry").val("");
 
     getPlayers();
@@ -58,4 +66,40 @@ function getPlayers() {
        names += $(this).html() + " ";
     });
     console.log(names);
+}
+
+function renamePlayer(currentplayerrow) {
+    let currentplayername = playerlistingtable.row($(currentplayerrow)).data()[1];
+
+    $("input#rename-player").val(currentplayername);
+
+    // Set up dialog to have a variable functionality on the rename function
+    $("#rename-user").dialog({
+        height: "auto",
+        width: 400,
+        modal: true,
+        autoOpen: true,
+        buttons:{
+            Rename: function(){
+                $("input#rename-player").val();
+                let namedcell = $(":nth-child(2)", currentplayerrow);
+                let newname = $("input#rename-player").val();
+                console.log(playerlistingtable.cell($(namedcell)).data(newname));
+                $(this).dialog("close");
+
+            },
+            Close: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#rename-user").on("keypress", function (e) {
+        if (e.which === 13) {
+            $("input#rename-player").val();
+            let namedcell = $(":nth-child(2)", currentplayerrow);
+            let newname = $("input#rename-player").val();
+            console.log(playerlistingtable.cell($(namedcell)).data(newname));
+            $("#rename-user").dialog("close");
+    }});
 }
